@@ -1,0 +1,22 @@
+{
+  "name": "amazon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "map.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donaldrhughes/amazon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/donaldrhughes/amazon/issues"
+  },
+  "homepage": "https://github.com/donaldrhughes/amazon#readme",
+  "dependencies": {
+    "inquirer": "^6.2.1"
+  }
+}
