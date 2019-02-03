@@ -1,6 +1,4 @@
-/*first display all items for sale. Include ids, names, prices
----completed up to this point---
-The app should then prompt users with two messages.
+/*
 Once the customer has placed the order, your 
 application should check if your store has enough of 
 the product to meet the customer's request.
@@ -12,62 +10,103 @@ This means updating the SQL database to reflect the
 emaining quantity.
 Once the update goes through, show the customer the 
 total cost of their purchase.
-If this activity took you between 8-10 hours, then 
-you've put enough time into this assignment. Feel 
-free to stop here -- unless you want to take on the 
-next challenge.*/
+*/
 
-//Require
+//Required Modules
 //=======================
 var inquirer = require("inquirer");
 var mysql = require("mysql");
-var mySqlConn = require("./mysql");
 
-//global variables
+//Required Files
+//=======================
+var mySqlConn = require("./mysql");
+var Product = require("./product");
+
+
+//Global Variables
 //========================
-var arrProducts = ["prod1", "prod2", "prod3"];
+
 
 //Main
 //==========================
-mySqlConn();
-
-workflow(arrProducts);
+main();
 
 
-//functions
+//Functions
 //=========================
 
-//read products from db
-function rdProd(){
+function main() {
     
- 
+    store();
+   
+    
 }
-//push to arrProducts
+function store() {
+    var connection = mySqlConn(connection);
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        
+        var products = [];
+        for (var i = 0; i < res.length; i++) {
+            // store.push(res[i].product_name);
+            var product = new Product(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);
+            products.push(product);
+        }
+        console.table(products)
+        connection.end();
+        flowProd(products);
+
+    })
+}
 
 
+function flowProd(products) {
+    var connection = mySqlConn(connection);
 
-//establish the inquirer workflow
-function workflow(arrProducts) {
-    
-    inquirer
-        .prompt([
-            {
-                type: "list",
-                message: "What is the product you want to buy?",
-                choices: arrProducts,
-                name: "products",
-            },
-            {
-                type: "input",
-                message: "How many units of the product they would like to buy?",
-                choices: [1,2,3,4,5],
-                name: "qty",
-            },
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        
+                        var prodInq = [];
+                        for (var i = 0; i < res.length; i++) {
+                            prodInq.push(res[i].product_name);
+                        }
+                       
+                        return prodInq;
+                    },
+                    message: "What is the product you want to buy?",
+                },
+                {
+                    type: "input",
+                    message: "How many units would you like to buy?",
+                    choices: ["1", "2", "3", "4", "5"],
+                    name: "qty"
+                }
 
-        ])
-        .then(answers => {
-            // if (answers === "Create") {
-            //     inquirer
-            // }
-        })
+            ])
+            .then(function(ans) {
+                console.table(products);
+                console.log(ans.qty)
+                console.log(ans.choice);
+                // If the user says yes to another game, play again, otherwise quit the game
+                if (ans.qty > 1000) {
+                    console.log("greater")
+                    connection.end();
+                }
+                else {
+                    console.log("less")
+                    connection.end();
+                }
+              });
+
+    })
+
+
+    //  console.log(connection);   
+
 }
