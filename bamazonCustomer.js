@@ -109,13 +109,14 @@ function flowProd(products) {
              
                 console.log("You chose to buy Total: " + numAns + " of Product: " + ans.choice);
                
+                //verification
                 //foundName == ans.choice &&
 
                 //check if qty is ok
                 //if product qty not ok inform user & restart
                 if ( numAns >= foundQty) {
                     console.log("Unfortunately, " + foundName + " is not available at this time!");
-                    connection.end();
+                   
                     store();
                 }
                 else {
